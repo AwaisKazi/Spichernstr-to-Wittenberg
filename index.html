@@ -1,0 +1,52 @@
+<html>
+	<title>Time for U3 from home</title>
+	<body>
+		<div>U3 Timings from Spichernstrasse below</div>
+		<table id="result">
+			
+		</table>
+	</body>
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		var a = $('#result');
+		var times = [];
+		$.ajax({
+			url: 'https://1.bvg.transport.rest/journeys?from=900000042101&to=900000056101',
+			success : function(data) {
+				for(var i = 0 ; i < data.length ; i++)
+				{
+					if(data[i].legs.length < 2 && data[i].legs.length > 0)
+					{
+						var line = data[i].legs[0].line.id;
+						if(line === 'u3')
+						{
+							console.log(data[i].legs[0].departure)
+							var date = new Date(data[i].legs[0].departure);
+							var hours = date.getHours();
+						    var minutes = date.getMinutes();
+						    var ampm = hours >= 12 ? 'pm' : 'am';
+						    hours = hours % 12;
+						    hours = hours ? hours : 12; // the hour '0' should be '12'
+						    minutes = minutes < 10 ? '0'+minutes : minutes;
+						    var strTime = hours + ':' + minutes + ' ' + ampm;
+							times.push(strTime);
+						}
+					}
+				}
+				console.log(times);
+				var html = '';
+		for(var i = 0 ; i<times.length;i++)
+		{
+			html+='<tr><td>' + times[i] + '</td></tr>'
+		}
+console.log(html)
+		a.append(html);
+			}
+		})
+		
+
+	</script>
+</html>
